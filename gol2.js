@@ -329,3 +329,28 @@ function setRandomStates(){
     }
     drawGrid();
 }
+
+
+//shape
+var shapesDiv = document.getElementById('shapes');
+
+let shapes = await getShapes();
+
+Object.keys(shapes).forEach((shape) => {
+    let newShape = document.createElement('custom-shape');
+    newShape.setAttribute('shape', shape);
+    shapesDiv.appendChild(newShape);
+})
+
+async function getShapes() {
+    let shapes = {};
+
+    await fetch('shapes.json')
+        .then(response => response.json())
+        .then(data => {
+            shapes = data;
+        })
+        .catch(error => console.error('Error loading shapes:', error));
+
+    return shapes;
+}
