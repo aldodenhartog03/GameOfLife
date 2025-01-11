@@ -3,65 +3,64 @@
 <head>
     <title>GOL</title>
     <link rel="stylesheet" href="style.css"/> 
-    <script defer type="module" src="gol.js" ></script>
+    <!-- <script defer type="module" src="gol.js" ></script> -->
+    <script defer type="module" src="gol2.js" ></script>
 </head>
-<body style="background: black">
+<body style="background: black; margin: 0;">
 <div id="bg" class="bg" style="opacity: 0; transition: none"></div>
-<div style="display: flex; flex-direction: column; width: fit-content;">
-    <div style="display: flex; font-size: 1vw; user-select: none;">
-        <div>
-            <label>Size: </label>
-            <select id="size-select">
-                <option value="100">100</option>
-                <option value="225">225</option>
-                <option value="400">400</option>
-                <option value="10000">10000</option>
-            </select>
-        </div>
-        <div>
-            <label>Speed: </label>
-            <select id="speed-select">
-                <option value="1">1x</option>
-                <option value="2">2x</option>
-                <option value="4">4x</option>
-                <option value="8">8x</option>
-                <option value="16">16x</option>
-            </select>
-        </div>
-        <div>
-            <label>Shape: </label>
-            <select id="shape-select">
-                <option value="dot">Dot</option>
-                <option value="glider">Glider</option>
-                <option value="pyramid">Pyramid</option>
-                <option value="reflector">Reflector</option>
-                <option value="crab">Crab</option>
-            </select>
-        </div>
-        <div id="direction-select-div" hidden>
-            <label>Direction: </label>
-            <select id="direction-select">
-                <option value="upRight">Up-Right</option>
-                <option value="upLeft">Up-Left</option>
-                <option value="downRight">Down-Right</option>
-                <option value="downLeft">Down-Left</option>
-            </select>
-        </div>
+<div style="width: 99vw; display: flex; justify-content: center; font-size: 1vw;">
+    <div>
+        <label>Shape: </label>
+        <select id="shape-select">
+            <option value="dot">Dot</option>
+            <option value="glider">Glider</option>
+            <option value="pyramid">Pyramid</option>
+            <option value="reflector">Reflector</option>
+            <option value="crab">Crab</option>
+        </select>
     </div>
-
-    <div style="display: flex; justify-content: space-between; user-select: none">
-        <div style="display: flex;">
-            <div id="start" class="start-button">Start</div>
-            <div id="reset" class="reset-button">Reset</div>
-            <div id="nextStep" class="next-button">></div>
-            <div id="next10Step" class="next-button">>></div>
-        </div>
-        <div style="display: flex;">
-            <div id="random" class="start-button">Random</div>
-            <div id="wrap" class="start-button" style="background-color: red;">Wrap</div>
-        </div>
+    <div>
+        <canvas id="gridCanvas" style="border: 1px solid lightgrey; margin-top: 5px; width: 50vw;"></canvas>
     </div>
-    <div id="grid" class="container">
+    <div style="display: flex; flex-direction: column; justify-content: space-between; user-select: none; height: fit-content;">
+        <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <label>Size: </label>
+                <select id="size-select">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="40">40</option>
+                    <option value="60">60</option>
+                    <option value="80">80</option>
+                    <option value="100" selected="selected">100</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <label>Speed: </label>
+                <select id="speed-select">
+                    <option value="1">1x</option>
+                    <option value="2" selected="selected">2x</option>
+                    <option value="4">4x</option>
+                    <option value="8">8x</option>
+                    <option value="16">16x</option>
+                </select>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+            <div style="display: flex;">
+                <div id="start" class="start-button">Start</div>
+                <div id="reset" class="reset-button">Reset</div>
+            </div>
+            <div style="display: flex;">
+                <div id="nextStep" class="next-button">></div>
+                <div id="next10Step" class="next-button">>></div>
+            </div>
+            <div style="display: flex;">
+                <div id="random" class="start-button">Random</div>
+                <div id="wrap" class="start-button" style="background-color: red;">Wrap</div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

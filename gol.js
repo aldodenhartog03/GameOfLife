@@ -44,6 +44,7 @@ function setGridSize(size) {
     size = Math.sqrt(size);
 
     gridContent = new Array(size);
+    currentGen = new Array(size);
     grid.innerHTML = '';
 
     //add rows
@@ -73,23 +74,8 @@ function draw(e) {
     var box = e.target;
     var [x, y] = findCords(e);
 
-    if (shape == 'glider') {
-        makeGlider(x, y);
-        return;
-    }
-
-    if(shape == 'pyramid'){
-        makePyramid(x, y);
-        return;
-    }
-
-    if(shape == 'reflector'){
-        makeReflector(x, y);
-        return;
-    }
-
-    if(shape == 'crab'){
-        makeCrab(x + 12, y + 14);
+    if(shape != 'dot'){
+        makeShape(x, y, shape);
         return;
     }
 
@@ -118,20 +104,28 @@ function makePyramid(x, y){
     activateIfInActive(x, y - 1);
 }
 
-function makeReflector(x, y){
-    activateIfInActive(x, y);
-    activateIfInActive(x - 1, y);
-    activateIfInActive(x - 3, y);
-    activateIfInActive(x - 4, y);
-    activateIfInActive(x + 1, y);
-    activateIfInActive(x + 2, y);
-    activateIfInActive(x + 4, y);
-    activateIfInActive(x + 5, y);
+let shapes = {};
 
-    activateIfInActive(x - 2, y + 1);
-    activateIfInActive(x - 2, y - 1);
-    activateIfInActive(x + 3, y + 1);
-    activateIfInActive(x + 3, y - 1);
+// Load the JSON file
+fetch('shapes.json')
+    .then(response => response.json())
+    .then(data => {
+        shapes = data;
+    })
+    .catch(error => console.error('Error loading shapes:', error));
+
+function makeShape(x, y, shapeName){
+
+    const shapeOffsets = shapes[shapeName];
+    if (!shapeOffsets) {
+        console.error(`Shape "${shapeName}" not found in JSON.`);
+        return;
+    }
+
+    shapeOffsets.forEach(offset => {
+        const [dx, dy] = offset;
+        activateIfInActive(x + dx, y + dy);
+    });
 }
 
 function makeCrab(x, y){
@@ -356,14 +350,6 @@ function neighbourCount(x, y) {
     }
 
     return neighbourCount;
-}
-
-function addNeighbourCount(x, y, count){
-    if(currentGen[y][x]){
-        count++;
-        console.log('hier');
-    }
-    return count;
 }
 
 function findCords(e) {
