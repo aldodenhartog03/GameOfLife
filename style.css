@@ -95,12 +95,26 @@ custom-shape{
     padding: 0.5vh 0px 0.5vh 0px;
     border-top: 1px solid white;
     border-bottom: 1px solid white;
+    user-select: none;
 }
 
 custom-shape:hover{
-    background-color: grey;
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+.selected {
+    background-color: grey !important;
 }
 
 custom-shape::part(div){
     height: fit-content;
+}
+custom-shape::part(rotate-button){
+    height: fit-content;
+    padding: 2px;
+    border: 1px solid white;
+}
+
+custom-shape::part(rotate-button):hover{
+    background-color: darkgrey;
 }

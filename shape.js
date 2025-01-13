@@ -1,4 +1,6 @@
 class shape extends HTMLElement {
+    static observedAttributes = ["rotation"];
+
     static gridSize;
     static cellSize;
     static shapeCanvas;
@@ -6,6 +8,7 @@ class shape extends HTMLElement {
     static ctx;
     static shapeName;
     static description;
+    static rotation;
 
     constructor() {
         super();
@@ -17,6 +20,16 @@ class shape extends HTMLElement {
 
         const shadowRoot = this.attachShadow({ mode: 'open' });
 
+        this.rotation = 0; 
+        this.rotateButton = document.createElement('div');
+        this.rotateButton.innerHTML = 'O';
+        this.rotateButton.part = 'rotate-button';
+        this.rotateButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.rotation = this.rotation == 3 ? 0 : this.rotation + 1;
+        })
+        shadowRoot.appendChild(this.rotateButton);
+
         this.shapeCanvas = document.createElement('canvas');
         this.shapeCanvas.style.width = '5vw';
         this.gridSize = this.getGridSize();
@@ -27,8 +40,11 @@ class shape extends HTMLElement {
         this.description = document.createElement('div');
         this.description.innerHTML = this.shapeName;
         this.description.part = 'div';
-
         shadowRoot.appendChild(this.description);
+    }
+
+    attributeChangedCallback(name, oldValue, newValue){
+        console.log(name +' '+ oldValue +' '+ newValue);
     }
 
     drawShape() {
@@ -43,7 +59,7 @@ class shape extends HTMLElement {
     }
 
     drawGrid() {
-        let lineSize = this.shapeCanvas.width / 100 * 2;
+        let lineSize = Math.floor(this.shapeCanvas.width / 100 * 1);
 
         for (let x = 0; x <= this.gridSize; x++) {
             this.ctx.clearRect(x * this.cellSize, 0, lineSize, this.shapeCanvas.height);

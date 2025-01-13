@@ -178,6 +178,14 @@ function draw(e) {
     const x = Math.floor((e.clientX - rect.left) * scaleX / cellSize);
     const y = Math.floor((e.clientY - rect.top) * scaleY / cellSize);
 
+    if(selectedShape != 'dot'){
+        for (let i = 0; i < selectedShape.length; i++) {
+            currentGen[selectedShape[i][1] + y][selectedShape[i][0] + x] = true;
+            fillCell(selectedShape[i][0] + x, selectedShape[i][1] + y, true);
+        }
+        return;
+    }
+
     if (visitedWhileDrawing.some(visited => visited[0] == x && visited[1] == y)) {
         return;
     }
@@ -334,13 +342,33 @@ function setRandomStates(){
 //shape
 var shapesDiv = document.getElementById('shapes');
 
-let shapes = await getShapes();
+let shapesCords = await getShapes();
+let shapesItems = new Array();
+let selectedShape;
 
-Object.keys(shapes).forEach((shape) => {
+Object.keys(shapesCords).forEach((shape) => {
     let newShape = document.createElement('custom-shape');
     newShape.setAttribute('shape', shape);
+    newShape.addEventListener('click', onShapeSelect);
     shapesDiv.appendChild(newShape);
+    
+    shapesItems.push(newShape);
+
+    //first selected shape = dot
+    if(shape == 'Dot'){
+        newShape.classList.add('selected');
+        selectedShape = shapesCords[shape];
+    }
 })
+
+function onShapeSelect(e){
+    shapesItems.forEach(shapeItem => {
+        shapeItem.classList.toggle('selected', false);
+    })
+    e.target.classList.add('selected');
+    selectedShape = shapesCords[e.target.getAttribute('shape')];
+    console.log(selectedShape);
+}
 
 async function getShapes() {
     let shapes = {};
