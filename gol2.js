@@ -177,11 +177,50 @@ function draw(e) {
 
     const x = Math.floor((e.clientX - rect.left) * scaleX / cellSize);
     const y = Math.floor((e.clientY - rect.top) * scaleY / cellSize);
+    
+    let shapeGridSizeX = 0;
+    let shapeGridSizeY = 0;
 
-    if(selectedShape != 'dot'){
+    //get max size of shape
+    selectedShape.forEach((cord) => {
+        if(cord[0] > shapeGridSizeX){
+            shapeGridSizeX = cord[0]
+        }
+        if(cord[1] > shapeGridSizeY){
+            shapeGridSizeY = cord[1];
+        }
+    })
+
+    if(selectedShape.length != 1 && selectedShape[0] != [0, 0]){
         for (let i = 0; i < selectedShape.length; i++) {
-            currentGen[selectedShape[i][1] + y][selectedShape[i][0] + x] = true;
-            fillCell(selectedShape[i][0] + x, selectedShape[i][1] + y, true);
+            let cordsX = selectedShape[i][0];
+            let cordsY = selectedShape[i][1];
+            let rotatedX;
+            let rotatedY;
+
+            switch (selectedRotation) {
+                case 0: // 0 degrees
+                    rotatedX = cordsX;
+                    rotatedY = cordsY;
+                    break;
+                case 3: // 90 degrees
+                    rotatedX = cordsY;
+                    rotatedY = shapeGridSizeY - 1 - cordsX;
+                    break;
+                case 2: // 180 degrees
+                    rotatedX = shapeGridSizeX - 1 - cordsX;
+                    rotatedY = shapeGridSizeY - 1 - cordsY;
+                    break;
+                case 1: // 270 degrees
+                    rotatedX = shapeGridSizeX - 1 - cordsY;
+                    rotatedY = cordsX;
+                    break;
+            }
+            console.log(rotatedX +' '+ rotatedY);
+            rotatedX += parseInt(x);
+            rotatedY += parseInt(y);
+            currentGen[rotatedX][rotatedY] = true;
+            fillCell(rotatedX, rotatedY, true);
         }
         return;
     }
@@ -345,6 +384,7 @@ var shapesDiv = document.getElementById('shapes');
 let shapesCords = await getShapes();
 let shapesItems = new Array();
 let selectedShape;
+let selectedRotation = 0;
 
 Object.keys(shapesCords).forEach((shape) => {
     let newShape = document.createElement('custom-shape');
@@ -367,7 +407,8 @@ function onShapeSelect(e){
     })
     e.target.classList.add('selected');
     selectedShape = shapesCords[e.target.getAttribute('shape')];
-    console.log(selectedShape);
+    selectedRotation = parseInt(e.target.getAttribute('rotation'));
+    console.log(selectedRotation);
 }
 
 async function getShapes() {

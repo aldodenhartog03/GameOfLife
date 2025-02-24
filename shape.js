@@ -1,6 +1,4 @@
 class shape extends HTMLElement {
-    static observedAttributes = ["rotation"];
-
     static gridSize;
     static cellSize;
     static shapeCanvas;
@@ -21,12 +19,14 @@ class shape extends HTMLElement {
         const shadowRoot = this.attachShadow({ mode: 'open' });
 
         this.rotation = 0; 
+        this.setAttribute('rotation', this.rotation);
         this.rotateButton = document.createElement('div');
         this.rotateButton.innerHTML = 'O';
         this.rotateButton.part = 'rotate-button';
         this.rotateButton.addEventListener('click', (e) => {
-            e.stopPropagation();
             this.rotation = this.rotation == 3 ? 0 : this.rotation + 1;
+            this.setAttribute('rotation', this.rotation);
+            this.drawShape();
         })
         shadowRoot.appendChild(this.rotateButton);
 
@@ -43,16 +43,36 @@ class shape extends HTMLElement {
         shadowRoot.appendChild(this.description);
     }
 
-    attributeChangedCallback(name, oldValue, newValue){
-        console.log(name +' '+ oldValue +' '+ newValue);
-    }
-
     drawShape() {
         this.ctx = this.shapeCanvas.getContext("2d");
         this.shapeCanvas.width = this.gridSize * this.cellSize;
         this.shapeCanvas.height = this.gridSize * this.cellSize;
+        
         for (let i = 0; i < this.shapeCords.length; i++) {
-            this.fillRect(this.shapeCords[i][0], this.shapeCords[i][1]);
+            let x = this.shapeCords[i][0];
+            let y = this.shapeCords[i][1];
+            let rotatedX;
+            let rotatedY;
+
+            switch (this.rotation) {
+                case 0: // 0 degrees
+                    rotatedX = x;
+                    rotatedY = y;
+                    break;
+                case 3: // 90 degrees
+                    rotatedX = y;
+                    rotatedY = this.gridSize - 1 - x;
+                    break;
+                case 2: // 180 degrees
+                    rotatedX = this.gridSize - 1 - x;
+                    rotatedY = this.gridSize - 1 - y;
+                    break;
+                case 1: // 270 degrees
+                    rotatedX = this.gridSize - 1- y;
+                    rotatedY = x;
+                    break;
+            }
+            this.fillRect(rotatedX, rotatedY);
         }
 
         this.drawGrid();
