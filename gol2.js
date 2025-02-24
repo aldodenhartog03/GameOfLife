@@ -216,10 +216,9 @@ function draw(e) {
                     rotatedY = cordsX;
                     break;
             }
-            console.log(rotatedX +' '+ rotatedY);
             rotatedX += parseInt(x);
             rotatedY += parseInt(y);
-            currentGen[rotatedX][rotatedY] = true;
+            currentGen[rotatedY][rotatedX] = true;
             fillCell(rotatedX, rotatedY, true);
         }
         return;
